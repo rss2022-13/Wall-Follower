@@ -34,10 +34,10 @@ class WallFollower:
         angles = [angle_min + i*angle_change for i in range(len(ranges))]
 
         # Get the half of the ranges/angles lists that are relevant for desired side to follow
-        if self.SIDE == -1: # RIGHT
+        if self.SIDE == -1: # LEFT
             relevant_data = ranges[0:50]
             relevant_angles = angles[0:50]
-        else: # LEFT
+        else: # RIGHT
             relevant_data = ranges[50:100]
             relevant_angles = angles[50:100]
 
