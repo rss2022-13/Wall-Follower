@@ -12,8 +12,8 @@ from geometry_msgs.msg import Point
 from visualization_tools import *
 
 class WallFollower:
-    SCAN_TOPIC = rospy.get_param("/scan")
-    DRIVE_TOPIC = rospy.get_param("/vesc/ackermann_cmd_mux/input/navigation")
+    SCAN_TOPIC = rospy.get_param("wall_follower/scan_topic")
+    DRIVE_TOPIC = rospy.get_param("wall_follower/drive_topic")
     # WALL_TOPIC = "/wall"
     SIDE = rospy.get_param("wall_follower/side")
     VELOCITY = rospy.get_param("wall_follower/velocity")
