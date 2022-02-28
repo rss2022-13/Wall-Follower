@@ -18,6 +18,8 @@ class WallFollower:
     SIDE = rospy.get_param("wall_follower/side")
     VELOCITY = rospy.get_param("wall_follower/velocity")
     DESIRED_DISTANCE = rospy.get_param("wall_follower/desired_distance")
+    kp = rospy.get_param("wall_follower/kp")
+    kd = rospy.get_param("wall_follower/kd")
 
     def __init__(self):
         self.sub = rospy.Subscriber(self.SCAN_TOPIC, LaserScan, self.controller)
@@ -66,8 +68,6 @@ class WallFollower:
         error = wall_distance - self.SIDE * self.DESIRED_DISTANCE
         error += wall_angle * 0.5
         
-        kp = 4.0
-        kd = 2.0
         derivative_error = error - self.previous_error
         angle = error * kp + derivative_error * kd
 
