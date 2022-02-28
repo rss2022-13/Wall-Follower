@@ -33,27 +33,29 @@ class WallFollower:
 
         angles = [angle_min + i*angle_change for i in range(len(ranges))]
 
+        middle_ix = len(angles) // 2
+
         # Get the half of the ranges/angles lists that are relevant for desired side to follow
         if self.SIDE == -1: # LEFT
-            relevant_data = ranges[0:50]
-            relevant_angles = angles[0:50]
+            relevant_data = ranges[:middle_ix]
+            relevant_angles = angles[:middle_ix]
         else: # RIGHT
-            relevant_data = ranges[50:100]
-            relevant_angles = angles[50:100]
+            relevant_data = ranges[middle_ix:]
+            relevant_angles = angles[middle_ix:]
 
         # Determine how close the closest reading is
         closest_index = relevant_data.index(min(relevant_data))
         closest_point_angle = relevant_angles[closest_index]
         
-        targeted_ranges = np.array(relevant_data[max(0, closest_index - 16): min(50, closest_index + 16)])
-        targeted_angles = np.array(relevant_angles[max(0, closest_index - 16): min(50, closest_index + 16)])
+        targeted_ranges = np.array(relevant_data[max(0, closest_index - 16): min(middle_ix, closest_index + 16)])
+        targeted_angles = np.array(relevant_angles[max(0, closest_index - 16): min(middle_ix, closest_index + 16)])
         
         targeted_x = np.cos(targeted_angles) * targeted_ranges
         targeted_y = np.sin(targeted_angles) * targeted_ranges
         
         wall_fit = np.polyfit(targeted_x,targeted_y, 1)
         
-        if (min(ranges[45:55]) > 2): # If there is no wall close to us, do the math to find where the wall is
+        if (min(ranges[middle_ix-5:middle_ix+5]) > 2): # If there is no wall close to us, do the math to find where the wall is
             wall_angle = math.atan2(wall_fit[0], 1.0) 
             wall_distance = wall_fit[1] * math.cos(wall_angle)
         
