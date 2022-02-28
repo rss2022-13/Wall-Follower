@@ -14,7 +14,7 @@ from visualization_tools import *
 class WallFollower:
     SCAN_TOPIC = rospy.get_param("wall_follower/scan_topic")
     DRIVE_TOPIC = rospy.get_param("wall_follower/drive_topic")
-    # WALL_TOPIC = "/wall"
+    WALL_TOPIC = "/wall"
     SIDE = rospy.get_param("wall_follower/side")
     VELOCITY = rospy.get_param("wall_follower/velocity")
     DESIRED_DISTANCE = rospy.get_param("wall_follower/desired_distance")
@@ -24,7 +24,7 @@ class WallFollower:
     def __init__(self):
         self.sub = rospy.Subscriber(self.SCAN_TOPIC, LaserScan, self.controller)
         self.pub = rospy.Publisher(self.DRIVE_TOPIC, AckermannDriveStamped, queue_size=1)
-        # self.line_pub = rospy.Publisher(self.WALL_TOPIC, Marker, queue_size=1)
+        self.line_pub = rospy.Publisher(self.WALL_TOPIC, Marker, queue_size=1)
         self.previous_error = 0
 
     def controller(self, data):
@@ -38,10 +38,10 @@ class WallFollower:
         middle_ix = len(angles) // 2
 
         # Get the half of the ranges/angles lists that are relevant for desired side to follow
-        if self.SIDE == -1: # LEFT
+        if self.SIDE == -1: # RIGHT
             relevant_data = ranges[:middle_ix]
             relevant_angles = angles[:middle_ix]
-        else: # RIGHT
+        else: # LEFT
             relevant_data = ranges[middle_ix:]
             relevant_angles = angles[middle_ix:]
 
@@ -56,6 +56,7 @@ class WallFollower:
         targeted_y = np.sin(targeted_angles) * targeted_ranges
         
         wall_fit = np.polyfit(targeted_x,targeted_y, 1)
+        VisualizationTools.plot_line(targeted_x, targeted_y, self.line_pub, frame="/laser")
         
         if (min(ranges[middle_ix-5:middle_ix+5]) > 2): # If there is no wall close to us, do the math to find where the wall is
             wall_angle = math.atan2(wall_fit[0], 1.0) 
