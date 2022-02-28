@@ -69,7 +69,7 @@ class WallFollower:
         error += wall_angle * 0.5
         
         derivative_error = error - self.previous_error
-        angle = error * kp + derivative_error * kd
+        angle = error * self.kp + derivative_error * self.kd
 
         angle = min(max(angle, -math.pi/2), math.pi/2)
         angle += wall_angle
