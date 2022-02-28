@@ -12,8 +12,8 @@ from geometry_msgs.msg import Point
 from visualization_tools import *
 
 class WallFollower:
-    SCAN_TOPIC = rospy.get_param("wall_follower/scan_topic")
-    DRIVE_TOPIC = rospy.get_param("wall_follower/drive_topic")
+    SCAN_TOPIC = rospy.get_param("/scan")
+    DRIVE_TOPIC = rospy.get_param("/vesc/ackermann_cmd_mux/input/navigation")
     WALL_TOPIC = "/wall"
     SIDE = rospy.get_param("wall_follower/side")
     VELOCITY = rospy.get_param("wall_follower/velocity")
@@ -22,7 +22,7 @@ class WallFollower:
     def __init__(self):
         self.sub = rospy.Subscriber(self.SCAN_TOPIC, LaserScan, self.controller)
         self.pub = rospy.Publisher(self.DRIVE_TOPIC, AckermannDriveStamped, queue_size=1)
-        self.line_pub = rospy.Publisher(self.WALL_TOPIC, Marker, queue_size=1)
+        # self.line_pub = rospy.Publisher(self.WALL_TOPIC, Marker, queue_size=1)
         self.previous_error = 0
 
     def controller(self, data):
