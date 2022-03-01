@@ -13,7 +13,7 @@ class WallFollower:
     # Access these variables in class functions with self:
     # i.e. self.CONSTANT
     SCAN_TOPIC = rospy.get_param("wall_follower/scan_topic")
-    DRIVE_TOPIC = rospy.get_param("wall_follower/drive_topic")
+    DRIVE_TOPIC = rospy.get_param("/vesc/ackermann_cmd_mux/input/navigation")
     SIDE = rospy.get_param("wall_follower/side")
     VELOCITY = rospy.get_param("wall_follower/velocity")
     DESIRED_DISTANCE = rospy.get_param("wall_follower/desired_distance")
@@ -37,13 +37,13 @@ class WallFollower:
         side = ""
 
         if self.SIDE == -1:
-            x = x[:length[1]//2]
-            y = y[:length[1]//2]
-            x = x[np.array(data.ranges[:length[1]//2]) < 3.0*self.DESIRED_DISTANCE]
-            y = y[np.array(data.ranges[:length[1]//2]) < 3.0*self.DESIRED_DISTANCE]
+            x = x[:length//2]
+            y = y[:length//2]
+            x = x[np.array(data.ranges[:length//2]) < 3.0*self.DESIRED_DISTANCE]
+            y = y[np.array(data.ranges[:length//2]) < 3.0*self.DESIRED_DISTANCE]
         else:
-            x = x[length[1]//2:]
-            y = y[length[1]//2:]
+            x = x[length//2:]
+            y = y[length//2:]
             x = x[np.array(data.ranges[length[1]//2:]) < 3.0*self.DESIRED_DISTANCE]
             y = y[np.array(data.ranges[length[1]//2:]) < 3.0*self.DESIRED_DISTANCE]
 
