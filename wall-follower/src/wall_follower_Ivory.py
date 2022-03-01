@@ -19,6 +19,8 @@ class WallFollower:
     DESIRED_DISTANCE = rospy.get_param("wall_follower/desired_distance")
     integral = 0
     previous_error = 0
+    kp = rospy.get_param("wall_follower/kp")
+    kd = rospy.get_param("wall_follower/kd")
     
     def __init__(self):
 
@@ -35,15 +37,15 @@ class WallFollower:
         side = ""
 
         if self.SIDE == -1:
-            x = x[:60]
-            y = y[:60]
-            x = x[np.array(data.ranges[:60]) < 3.0*self.DESIRED_DISTANCE]
-            y = y[np.array(data.ranges[:60]) < 3.0*self.DESIRED_DISTANCE]
+            x = x[:length[1]//2]
+            y = y[:length[1]//2]
+            x = x[np.array(data.ranges[:length[1]//2]) < 3.0*self.DESIRED_DISTANCE]
+            y = y[np.array(data.ranges[:length[1]//2]) < 3.0*self.DESIRED_DISTANCE]
         else:
-            x = x[40:]
-            y = y[40:]
-            x = x[np.array(data.ranges[40:]) < 3.0*self.DESIRED_DISTANCE]
-            y = y[np.array(data.ranges[40:]) < 3.0*self.DESIRED_DISTANCE]
+            x = x[length[1]//2:]
+            y = y[length[1]//2:]
+            x = x[np.array(data.ranges[length[1]//2:]) < 3.0*self.DESIRED_DISTANCE]
+            y = y[np.array(data.ranges[length[1]//2:]) < 3.0*self.DESIRED_DISTANCE]
 
         
         
@@ -67,9 +69,9 @@ class WallFollower:
             error = -self.DESIRED_DISTANCE + b*np.cos(theta)
         rospy.loginfo(error)
 
-        P = 5 #proportion
+        P = self.kp #proportion
         I = 0 #integral
-        D = 0.9 #derivative
+        D = self.kd #derivative
 
 
         dt = 1.0/50
