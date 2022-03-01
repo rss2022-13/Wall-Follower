@@ -13,7 +13,7 @@ class WallFollower:
     # Access these variables in class functions with self:
     # i.e. self.CONSTANT
     SCAN_TOPIC = rospy.get_param("wall_follower/scan_topic")
-    DRIVE_TOPIC = rospy.get_param("/vesc/ackermann_cmd_mux/input/navigation")
+    DRIVE_TOPIC = "/vesc/ackermann_cmd_mux/input/navigation"
     SIDE = rospy.get_param("wall_follower/side")
     VELOCITY = rospy.get_param("wall_follower/velocity")
     DESIRED_DISTANCE = rospy.get_param("wall_follower/desired_distance")
