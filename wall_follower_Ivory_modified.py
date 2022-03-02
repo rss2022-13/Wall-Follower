@@ -69,7 +69,7 @@ class WallFollower:
 
         #VISUALIATION wall black
         VisualizationTools.plot_line(x, a*x+b, self.line_pub, frame="/laser", color = (1,1,1))
-        VisualizationTools.plot_line(front_x, front_a*x+front_b, self.line_pub, frame="/laser", color = (1,0,1))
+        VisualizationTools.plot_line(front_x, front_a*front_x+front_b, self.line_pub, frame="/laser", color = (1,0,1))
         
         theta = np.arctan(a)
 
