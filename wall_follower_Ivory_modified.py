@@ -44,13 +44,13 @@ class WallFollower:
         front_y = y[length//2-ang_window:length//2+ang_window]
 
         if self.SIDE == -1:
-            x = x[:length//3]
-            y = y[:length//3]
+            x = x[:length//2-ang_window]
+            y = y[:length//2-ang_window]
             #x = x[np.array(data.ranges[:length//2]) < 3.0*self.DESIRED_DISTANCE]
             #y = y[np.array(data.ranges[:length//2]) < 3.0*self.DESIRED_DISTANCE]
         else:
-            x = x[2*length//3:]
-            y = y[2*length//3:]
+            x = x[length//2+ang_window:]
+            y = y[length//2+ang_window:]
 
             #x = x[np.array(data.ranges[length[1]//2:]) < 3.0*self.DESIRED_DISTANCE]
             #y = y[np.array(data.ranges[length[1]//2:]) < 3.0*self.DESIRED_DISTANCE]
