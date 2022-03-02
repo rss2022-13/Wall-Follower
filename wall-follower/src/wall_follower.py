@@ -32,6 +32,7 @@ class WallFollower:
         rospy.Subscriber(self.SCAN_TOPIC, LaserScan, self.callback)
         self.line_pub = rospy.Publisher("/wall", Marker, queue_size=1)
         self.front_line_pub = rospy.Publisher("/front_wall", Marker, queue_size=1)
+        self.err_pub = rospy.Publisher("/error", Float64, queue_size=1)
         #rospy.loginfo(self.SIDE)
         
     def callback(self, data):
@@ -99,6 +100,7 @@ class WallFollower:
         self.N+=1
         self.existing_error+=np.abs(error)
         self.plot_loss+=[loss]
+        self.err_pub(error)
         rospy.loginfo(self.plot_loss)
         rospy.loginfo("Loss:%.2f",loss)
         rospy.loginfo("Error from Desired Distance: %.2f", error)
