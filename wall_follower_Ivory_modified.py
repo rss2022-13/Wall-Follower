@@ -37,7 +37,7 @@ class WallFollower:
         length = x.size
 
         # Number of indices for angle window for front wall linear fit
-        ang_window = int((np.pi/4)/data.angle_increment) 
+        ang_window = int((np.pi/8)/data.angle_increment) 
         side = ""
         
         front_x = x[length//2-ang_window:length//2+ang_window]
@@ -109,8 +109,8 @@ class WallFollower:
         msg.drive.acceleration = 0
         msg.drive.steering_angle = P*error + D*derivative + max(min(I*self.integral, 0.34), -0.34)
 
-        if abs(front_b*np.cos(front_theta) < 2*self.DESIRED_DISTANCE) and abs(front_theta) > 1.15:
-            msg.drive.steering_angle = 2*fsf*0.34
+        if abs(front_b*np.cos(front_theta) < 2*self.DESIRED_DISTANCE) and abs(front_theta) > 1.1:
+            msg.drive.steering_angle += 2*fsf*0.34
 
         msg.drive.steering_angle_velocity = 0
 
