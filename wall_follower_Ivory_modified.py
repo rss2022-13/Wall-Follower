@@ -1,10 +1,12 @@
 #!/usr/bin/env python2
 
+import queue
 import numpy as np
 
 import rospy
 from rospy.numpy_msg import numpy_msg
 from sensor_msgs.msg import LaserScan
+from std_msgs.msg import Float64
 from ackermann_msgs.msg import AckermannDriveStamped
 from visualization_tools import *
 
@@ -29,6 +31,7 @@ class WallFollower:
         rospy.Subscriber(self.SCAN_TOPIC, LaserScan, self.callback)
         self.line_pub = rospy.Publisher("/wall", Marker, queue_size=1)
         self.front_line_pub = rospy.Publisher("/front_wall", Marker, queue_size=1)
+        self.err_pub = rospy.Publisher("/error", Float64, queue_size=1)
         #rospy.loginfo(self.SIDE)
         
     def callback(self, data):
@@ -96,6 +99,7 @@ class WallFollower:
             error = -self.DESIRED_DISTANCE + b*np.cos(theta)
             fsf = -1
         
+        self.err_pub(error)
         rospy.loginfo("Error from Desired Distance: %.2f", error)
 
         P = self.kp #proportion
