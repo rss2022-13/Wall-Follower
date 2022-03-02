@@ -12,6 +12,7 @@ class WallFollower:
     # Import ROS parameters from the "params.yaml" file.
     # Access these variables in class functions with self:
     # i.e. self.CONSTANT
+    ki = 0
     SCAN_TOPIC = rospy.get_param("wall_follower/scan_topic")
     DRIVE_TOPIC = "/vesc/ackermann_cmd_mux/input/navigation"
     SIDE = rospy.get_param("wall_follower/side")
@@ -21,7 +22,6 @@ class WallFollower:
     previous_error = 0
     kp = rospy.get_param("wall_follower/kp")
     kd = rospy.get_param("wall_follower/kd")
-    ki = 0
     
     def __init__(self):
 
@@ -32,6 +32,14 @@ class WallFollower:
         #rospy.loginfo(self.SIDE)
         
     def callback(self, data):
+        self.SCAN_TOPIC = rospy.get_param("wall_follower/scan_topic")
+        self.DRIVE_TOPIC = "/vesc/ackermann_cmd_mux/input/navigation"
+        self.SIDE = rospy.get_param("wall_follower/side")
+        self.VELOCITY = rospy.get_param("wall_follower/velocity")
+        self.DESIRED_DISTANCE = rospy.get_param("wall_follower/desired_distance")
+        self.kp = rospy.get_param("wall_follower/kp")
+        self.kd = rospy.get_param("wall_follower/kd")
+
         x = data.ranges * np.cos(np.linspace(data.angle_min, data.angle_max, len(data.ranges)))
         y = data.ranges * np.sin(np.linspace(data.angle_min, data.angle_max, len(data.ranges)))
         length = x.size
