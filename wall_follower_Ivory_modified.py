@@ -109,7 +109,7 @@ class WallFollower:
         msg.drive.acceleration = 0
         msg.drive.steering_angle = P*error + D*derivative + max(min(I*self.integral, 0.34), -0.34)
 
-        rospy.loginfo('dist to front wall:', -front_a/front_b)
+        rospy.loginfo('dist to front wall: %.2f', -front_a/front_b)
         if -front_b/front_a < 2*self.DESIRED_DISTANCE and abs(front_theta) > 1.1:
             msg.drive.steering_angle = 2*fsf*0.34
 
