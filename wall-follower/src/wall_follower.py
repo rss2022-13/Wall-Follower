@@ -5,6 +5,7 @@ import numpy as np
 import rospy
 from rospy.numpy_msg import numpy_msg
 from sensor_msgs.msg import LaserScan
+from std_msgs.msg import Float64
 from ackermann_msgs.msg import AckermannDriveStamped
 from visualization_tools import *
 
