@@ -28,16 +28,20 @@ class WallFollower:
         #SUBSCRIBER
         rospy.Subscriber(self.SCAN_TOPIC, LaserScan, self.callback)
         self.line_pub = rospy.Publisher("/wall", Marker, queue_size=1)
-        rospy.loginfo(self.SIDE)
+        self.front_line_pub = rospy.Publisher("/front_wall", Marker, queue_size=1)
+        #rospy.loginfo(self.SIDE)
         
     def callback(self, data):
         x = data.ranges * np.cos(np.linspace(data.angle_min, data.angle_max, len(data.ranges)))
         y = data.ranges * np.sin(np.linspace(data.angle_min, data.angle_max, len(data.ranges)))
         length = x.size
+
+        # Number of indices for angle window for front wall linear fit
+        ang_window = int((np.pi/16)//data.angle_increment) 
         side = ""
         
-        front_x = x[length//3:2*length//3]
-        front_y = y[length//3:2*length//3]
+        front_x = x[length//2-ang_window:length//2+ang_window]
+        front_y = y[length//2-ang_window:length//2+ang_window]
 
         if self.SIDE == -1:
             x = x[:length//3]
@@ -68,13 +72,13 @@ class WallFollower:
         front_b = front_wall[1]
 
         #VISUALIATION wall black
-        VisualizationTools.plot_line(x, a*x+b, self.line_pub, frame="/laser", color = (1,1,1))
-        VisualizationTools.plot_line(front_x, front_a*front_x+front_b, self.line_pub, frame="/laser", color = (1,0,1))
+        VisualizationTools.plot_line(x, a*x+b, self.line_pub, frame="/laser", color = (0,0,1))
+        VisualizationTools.plot_line(front_x, front_a*front_x+front_b, self.front_line_pub, frame="/laser", color = (1,0,1))
         
         theta = np.arctan(a)
 
         front_theta = np.arctan(front_a)
-
+        rospy.loginfo("Front Wall Angle: %.2f", front_theta)
         fsf = 1 #front steering factor
         
         if self.SIDE == -1:
@@ -105,7 +109,7 @@ class WallFollower:
         msg.drive.acceleration = 0
         msg.drive.steering_angle = P*error + D*derivative + max(min(I*self.integral, 0.34), -0.34)
 
-        if abs(front_b*np.cos(front_theta) < 2*self.DESIRED_DISTANCE) and abs(front_theta) < 0.1:
+        if abs(front_b*np.cos(front_theta) < 2*self.DESIRED_DISTANCE) and abs(front_theta) < 0.5:
             msg.drive.steering_angle = 2*fsf*0.34
 
         msg.drive.steering_angle_velocity = 0
