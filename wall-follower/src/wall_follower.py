@@ -87,7 +87,7 @@ class WallFollower:
         theta = np.arctan(a)
 
         front_theta = np.arctan(front_a)
-        rospy.loginfo("Front Wall Angle: %.2f", front_theta)
+        #rospy.loginfo("Front Wall Angle: %.2f", front_theta)
         fsf = 1 #front steering factor
         
         if self.SIDE == -1:
@@ -102,9 +102,9 @@ class WallFollower:
         self.existing_error+=np.abs(error)
         self.plot_loss+=[loss]
         self.err_pub.publish(error)
-        rospy.loginfo(self.plot_loss)
-        rospy.loginfo("Loss:%.2f",loss)
-        rospy.loginfo("Error from Desired Distance: %.2f", error)
+        #rospy.loginfo(self.plot_loss)
+        #rospy.loginfo("Loss:%.2f",loss)
+        #rospy.loginfo("Error from Desired Distance: %.2f", error)
 
         P = self.kp #proportion
         I = self.ki #integral
@@ -125,7 +125,7 @@ class WallFollower:
         msg.drive.acceleration = 0
         msg.drive.steering_angle = P*error + D*derivative + max(min(I*self.integral, 0.34), -0.34)
 
-        rospy.loginfo('dist to front wall: %.2f', -front_b/front_a)
+        #rospy.loginfo('dist to front wall: %.2f', -front_b/front_a)
         if -front_b/front_a < 2*self.DESIRED_DISTANCE and (-front_b/front_a) > 0:
            msg.drive.steering_angle = 2*fsf*0.34
 
