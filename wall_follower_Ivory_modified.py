@@ -21,7 +21,7 @@ class WallFollower:
     previous_error = 0
     kp = rospy.get_param("wall_follower/kp")
     kd = rospy.get_param("wall_follower/kd")
-    ki = rospy.get_param("wall_follower/ki")
+    ki = 0
     
     def __init__(self):
 
@@ -88,7 +88,7 @@ class WallFollower:
             error = -self.DESIRED_DISTANCE + b*np.cos(theta)
             fsf = -1
 
-        rospy.loginfo(error)
+        #rospy.loginfo(error)
 
         P = self.kp #proportion
         I = self.ki #integral
@@ -109,7 +109,8 @@ class WallFollower:
         msg.drive.acceleration = 0
         msg.drive.steering_angle = P*error + D*derivative + max(min(I*self.integral, 0.34), -0.34)
 
-        if abs(front_b*np.cos(front_theta) < 2*self.DESIRED_DISTANCE) and abs(front_theta) > 1.1:
+        rospy.loginfo('dist to front wall:', -front_a/front_b)
+        if -front_b/front_a < 2*self.DESIRED_DISTANCE and abs(front_theta) > 1.1:
             msg.drive.steering_angle = 2*fsf*0.34
 
         msg.drive.steering_angle_velocity = 0
