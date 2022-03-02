@@ -37,7 +37,7 @@ class WallFollower:
         length = x.size
 
         # Number of indices for angle window for front wall linear fit
-        ang_window = int((np.pi/16)//data.angle_increment) 
+        ang_window = int((np.pi/4)/data.angle_increment) 
         side = ""
         
         front_x = x[length//2-ang_window:length//2+ang_window]
