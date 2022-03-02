@@ -101,7 +101,7 @@ class WallFollower:
         self.N+=1
         self.existing_error+=np.abs(error)
         self.plot_loss+=[loss]
-        self.err_pub(error)
+        self.err_pub.publish(error)
         rospy.loginfo(self.plot_loss)
         rospy.loginfo("Loss:%.2f",loss)
         rospy.loginfo("Error from Desired Distance: %.2f", error)
